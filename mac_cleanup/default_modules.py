@@ -337,6 +337,16 @@ def yarn():
             unit.add(Path("~/Library/Caches/yarn").dry_run_only())
 
 
+def bun():
+    from mac_cleanup.utils import cmd
+
+    if cmd("type 'bun'"):
+        with clc as unit:
+            unit.message("Cleaning up Bun Cache")
+            unit.add(Command("bun pm cache rm"))
+            unit.add(Path("~/.bun/install/cache").dry_run_only())
+
+
 def pod():
     from mac_cleanup.utils import cmd
 
