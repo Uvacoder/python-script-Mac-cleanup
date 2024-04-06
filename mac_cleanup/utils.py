@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import Optional, cast
 
 from beartype import beartype  # pyright: ignore [reportUnknownVariableType]
-from xattr import xattr  # pyright: ignore [reportMissingTypeStubs]
 
 
 @beartype
@@ -96,10 +95,7 @@ def check_deletable(path: Path | str) -> bool:
     # Returns False if path startswith anything from SIP list or in custom list
     if any(path_posix.startswith(protected_path) for protected_path in list(map(expanduser, sip_list + user_list))):
         return False
-
-    path_posix = path_.expanduser().as_posix()
-
-    return "com.apple.rootless" not in xattr(path_posix).keys()
+    return "restricted" not in cmd(f"ls -lo {path_posix} | awk '{{print $3, $4}}'")
 
 
 @beartype
